@@ -1,5 +1,7 @@
 package serenity.rs.sporty;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +22,8 @@ public class ActivityMain extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
 
+        dbHelper.createUser("miksiii", "snele123", "http://www.facebook.com/hkjviprahaos");
+
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvPassword = (TextView) findViewById(R.id.tvPassword);
         tvMessage  = (TextView) findViewById(R.id.tvMessage);
@@ -28,12 +32,25 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     public void login(View v) {
-        boolean isFinished = dbHelper.createUser("miksiii", "snele123", "http://www.facebook.com/hkjviprahaos");
 
-        if(isFinished) {
-            Toast.makeText(ActivityMain.this, "Data inserted into users", Toast.LENGTH_SHORT).show();
+        User userAttemptedToLogin = dbHelper.getUserWithCredentials(tvUsername.getText().toString(), tvPassword.getText().toString());
+
+        if (userAttemptedToLogin == null) {
+            tvMessage.setText("Incorrrect username or password.");
+            tvUsername.setText("");
+            tvPassword.setText("");
+
         } else {
-            Toast.makeText(ActivityMain.this, "Problems with inserting", Toast.LENGTH_SHORT).show();
+
+            User.getUserInstance().setId(userAttemptedToLogin.getId());
+            User.getUserInstance().setUsername(userAttemptedToLogin.getUsername());
+            User.getUserInstance().setPassword(userAttemptedToLogin.getPassword());
+            User.getUserInstance().setLink(userAttemptedToLogin.getLink());
+
+            Intent switchLoginToChooseSportActivity = new Intent("serenity.rs.sporty.ActivitySportChooser");
+            startActivity(switchLoginToChooseSportActivity);
         }
+
+
     }
 }
