@@ -25,7 +25,7 @@
         <activity android:name=".ActivityProfileChanger">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="serenity.rs.sporty.ActivitySportChooser"></meta-data>
+                android:value="serenity.rs.sporty.ActivitySportChooser" />
 
             <intent-filter>
                 <action android:name="serenity.rs.sporty.ActivityProfileChanger" />
@@ -36,10 +36,21 @@
         <activity android:name=".ActivityEvents">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="serenity.rs.sporty.ActivitySportChooser"></meta-data>
+                android:value="serenity.rs.sporty.ActivitySportChooser" />
 
             <intent-filter>
                 <action android:name="serenity.rs.sporty.ActivityEvents" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ActivityCreateEvent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="serenity.rs.sporty.ActivityEvents" />
+
+            <intent-filter>
+                <action android:name="serenity.rs.sporty.ActivityCreateEvent" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SportName"
-        android:id="@+id/tvTitle"
+        android:id="@+id/tvAuthor"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textColor="#fff"
@@ -33,7 +33,7 @@
         android:text="114 events in here"
         android:id="@+id/tvDescription"
         android:textColor="#fff"
-        android:layout_below="@+id/tvTitle"
+        android:layout_below="@+id/tvAuthor"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

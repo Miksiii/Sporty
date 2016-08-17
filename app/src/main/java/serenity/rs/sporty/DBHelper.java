@@ -19,18 +19,31 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME    = "sporty.db";
     public static final String DB_TABLE_USERS   = "users";
     public static final String DB_TABLE_SPORTS  = "sports";
+    public static final String DB_TABLE_EVENTS  = "events";
     public static final int    DB_VERSION = 1;
 
     // user's table attributes
-    public static final String USERS_ID       = "ID";
-    public static final String USERS_USERNAME = "USERNAME";
-    public static final String USERS_PASSWORD = "PASSWORD";
-    public static final String USERS_LINK     = "LINK";
+    public static final String USERS_ID               = "ID";
+    public static final String USERS_USERNAME         = "USERNAME";
+    public static final String USERS_PASSWORD         = "PASSWORD";
+    public static final String USERS_LINK             = "LINK";
+
+    // event's table attributes
+    public static final String EVENTS_ID              = "ID";
+    public static final String EVENTS_TITLE           = "TITLE";
+    public static final String EVENTS_AUTHOR          = "USERS_USERNAME";
+    public static final String EVENTS_TYPE            = "SPORTS_TYPE";
+    public static final String EVENTS_DATE            = "DATE";
+    public static final String EVENTS_TIME            = "TIME";
+    public static final String EVENTS_REQUIRED_PEOPLE = "REQUIRED_PEOPLE";
+    public static final String EVENTS_JOINED_PEOPLE   = "JOINED_PEOPLE";
+    public static final String EVENTS_LONGITUDE       = "LONGITUDE";
+    public static final String EVENTS_LATITUDE        = "LATITUDE";
 
     // sport's table attributes
-    public static final String SPORTS_ID      = "ID";
-    public static final String SPORTS_TITLE   = "TITLE";
-    public static final String SPORTS_DESCRIPTION = "DESCRIPTION";
+    public static final String SPORTS_ID              = "ID";
+    public static final String SPORTS_TITLE           = "TITLE";
+    public static final String SPORTS_DESCRIPTION     = "DESCRIPTION";
 
     // tables creations sql
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + DB_TABLE_USERS
@@ -46,6 +59,19 @@ public class DBHelper extends SQLiteOpenHelper {
             + SPORTS_TITLE + " TEXT,"
             + SPORTS_DESCRIPTION + " TEXT)";
 
+    private static final String CREATE_TABLE_EVENTS = "CREATE TABLE " + DB_TABLE_EVENTS
+            + "("
+            + EVENTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + EVENTS_TITLE + " VARCHAR,"
+            + EVENTS_AUTHOR + " VARCHAR,"
+            + EVENTS_TYPE + " TEXT,"
+            + EVENTS_DATE + " VARCHAR,"
+            + EVENTS_TIME + " VARCHAR,"
+            + EVENTS_REQUIRED_PEOPLE + " INTEGER,"
+            + EVENTS_JOINED_PEOPLE + " INTEGER,"
+            + EVENTS_LONGITUDE + " VARCHAR, "
+            + EVENTS_LATITUDE + " VARCHAR)";
+
     // database helper
     SQLiteDatabase db;
 
@@ -60,6 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         sqLiteDatabase.execSQL(CREATE_TABLE_USERS);
         sqLiteDatabase.execSQL(CREATE_TABLE_SPORTS);
+        sqLiteDatabase.execSQL(CREATE_TABLE_EVENTS);
     }
 
     @Override
@@ -67,6 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_USERS + ";");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_SPORTS + ";");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DB_TABLE_EVENTS+ ";");
         onCreate(sqLiteDatabase);
     }
 
@@ -151,6 +179,48 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return sportsList;
+    }
+
+    public boolean createEvent(String title, String author, String type, String date, String time, int requiredPeople, int joinedPeople, String longitude, String latitude)
+    {
+        ContentValues eventContent = new ContentValues();
+
+        eventContent.put(EVENTS_TITLE, title);
+        eventContent.put(EVENTS_AUTHOR, author);
+        eventContent.put(EVENTS_TYPE, type);
+        eventContent.put(EVENTS_DATE, date);
+        eventContent.put(EVENTS_TIME, time);
+        eventContent.put(EVENTS_REQUIRED_PEOPLE, requiredPeople);
+        eventContent.put(EVENTS_JOINED_PEOPLE, joinedPeople);
+        eventContent.put(EVENTS_LONGITUDE, longitude);
+        eventContent.put(EVENTS_LATITUDE, latitude);
+
+        long query = db.insert(DB_TABLE_EVENTS, null, eventContent);
+
+        return (query == -1) ? false : true;
+    }
+
+    public ArrayList<Event> getListOfEvents() {
+        ArrayList<Event> eventsList = new ArrayList<Event>();
+
+        Cursor cursor = db.rawQuery("select * from " + DB_TABLE_EVENTS, null);
+
+        while (cursor.moveToNext()) {
+            eventsList.add(new Event(
+                    Integer.parseInt(cursor.getString(0)), // id
+                    cursor.getString(1),                   // title
+                    cursor.getString(2),                   // author
+                    cursor.getString(3),                   //type
+                    cursor.getString(4),                   // date
+                    cursor.getString(5),                   // time
+                    Integer.parseInt(cursor.getString(6)), // required people
+                    Integer.parseInt(cursor.getString(7)), // joined people
+                    cursor.getString(8),                   // longitude
+                    cursor.getString(9)                    // latitude
+            ));
+        }
+
+        return eventsList;
     }
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
@@ -10,30 +10,136 @@
     <View
         android:id="@+id/colored_bar"
         android:layout_width="fill_parent"
-        android:layout_height="145dp"
-        android:background="#ac4fd5" >
+        android:layout_height="200dp"
+        android:background="#ac4fd5"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp">
     </View>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/tvTitle"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#fff"
-        android:layout_marginTop="50dp"
-        android:textSize="20sp"
-        android:layout_marginBottom="5dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp"
+        android:layout_alignParentBottom="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/tvDescription"
-        android:textColor="#fff"
-        android:layout_below="@+id/tvTitle"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="\@Author"
+            android:id="@+id/tvAuthor"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="wants to play footbal on 22. Avg 2016 at 21:00h."
+            android:id="@+id/tvDescription"
+            android:textColor="#fff"
+            android:textSize="14dp"
+            android:paddingBottom="2dp"
+            android:layout_below="@+id/tvAuthor"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="&quot;Lorem ipsum dolor sit amet hamet!&quot;"
+            android:id="@+id/tvTitle"
+            android:textColor="#fff"
+            android:textSize="20dp"
+            android:paddingBottom="2dp"
+            android:layout_marginTop="14dp"
+            android:layout_below="@+id/tvDescription"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:paddingTop="15dp"
+            android:layout_marginTop="15dp">
+
+            <!-- col 1 -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingRight="0dp"
+                android:paddingLeft="30dp"
+                android:transitionGroup="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Going: 6/10"
+                    android:id="@+id/tvGoing"
+                    android:textColor="#fff"
+                    android:textSize="15dp"
+                    android:paddingBottom="2dp"
+                    android:layout_alignBaseline="@+id/bLocation"
+                    android:layout_alignBottom="@+id/bLocation"
+                    android:layout_alignStart="@+id/tvDescription" />
+            </LinearLayout>
+            <!-- col 1 end -->
+            <!-- col 2 -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:text="LOCATION"
+                    android:id="@+id/button"
+                    android:layout_width="110dp"
+                    android:layout_alignTop="@+id/bJoin"
+                    android:layout_centerHorizontal="true" />
+            </LinearLayout>
+            <!-- col 2 end -->
+            <!-- col 3 -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:text="JOIN"
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_alignBottom="@+id/colored_bar"
+                    android:layout_alignEnd="@+id/tvTitle"
+                    android:layout_marginBottom="17dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>

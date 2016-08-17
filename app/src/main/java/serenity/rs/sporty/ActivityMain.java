@@ -28,7 +28,6 @@ public class ActivityMain extends AppCompatActivity {
         tvPassword = (TextView) findViewById(R.id.tvPassword);
         tvMessage  = (TextView) findViewById(R.id.tvMessage);
         bLogin     = (Button) findViewById(R.id.bLogin);
-
     }
 
     public void login(View v) {

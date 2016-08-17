@@ -47,7 +47,7 @@ public class SportAdapter extends BaseAdapter{
 
         View v = View.inflate(ctx, R.layout.pattern_sport_chooser, null);
 
-        tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+        tvTitle = (TextView) v.findViewById(R.id.tvAuthor);
         tvDescription = (TextView) v.findViewById(R.id.tvDescription);
 
         tvTitle.setText(sportsList.get(i).getTitle());
