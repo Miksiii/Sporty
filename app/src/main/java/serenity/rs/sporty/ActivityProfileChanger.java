@@ -53,9 +53,5 @@ public class ActivityProfileChanger extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_events_actionbar, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
+
 }

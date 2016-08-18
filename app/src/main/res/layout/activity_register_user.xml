@@ -18,19 +18,23 @@
         android:paddingLeft="25dp"
         android:paddingRight="25dp">
 
-        <ImageView
-            android:layout_width="132dp"
-            android:layout_height="171dp"
-            android:id="@+id/mainLogo"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/logo"
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Make an Account and Enjoy the App!"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal|right"
             android:layout_weight="0.11"
-            android:layout_marginBottom="25dp" />
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:textColor="#fff"
+            android:textAlignment="center"
+            android:textSize="20dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tvUsername"
+            android:id="@+id/etUsername"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.11"
             android:background="#fff"
@@ -44,7 +48,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tvPassword"
+            android:id="@+id/etPassword"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.11"
             android:background="#fff"
@@ -56,39 +60,36 @@
             android:padding="5dp"
             android:inputType="textPassword"/>
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etLink"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.11"
+            android:background="#fff"
+            android:layout_marginBottom="15dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:hint="Enter facebook url"
+            android:paddingTop="5dp"
+            android:padding="5dp" />
+
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="LOGIN TO SPORTY"
-            android:id="@+id/bLogin"
+            android:text="CREATE AN ACCOUNTr"
+            android:id="@+id/bRegister"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.03"
             style="?android:attr/borderlessButtonStyle"
             android:background="#166fff"
-            android:textColor="#fff"
-            android:layout_marginBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:onClick="login" />
-
-        <Button
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="REGISTER IF NO ACCOUNT"
-            android:id="@+id/bRegister"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.11"
-            android:background="#FF1493"
             android:textColor="#fff"
             android:layout_marginBottom="25dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:onClick="goToRegisterActivity" />
+            android:onClick="registerUser" />
 
         <TextView
             android:layout_width="wrap_content"

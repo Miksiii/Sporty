@@ -200,10 +200,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return (query == -1) ? false : true;
     }
 
-    public ArrayList<Event> getListOfEvents() {
+    public ArrayList<Event> getListOfEvents(String sportType) {
         ArrayList<Event> eventsList = new ArrayList<Event>();
 
-        Cursor cursor = db.rawQuery("select * from " + DB_TABLE_EVENTS, null);
+        Cursor cursor = db.rawQuery("select * from " + DB_TABLE_EVENTS + " where SPORTS_TYPE='"+sportType+"' order by id desc", null);
 
         while (cursor.moveToNext()) {
             eventsList.add(new Event(
@@ -221,6 +221,34 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return eventsList;
+    }
+
+    public ArrayList<Event> getListOfEventsCreatedBy(String username, String sportType) {
+        ArrayList<Event> eventsList = new ArrayList<Event>();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM events where users_username='"+username+"' and sports_type='"+sportType+"'" , null);
+
+        while (cursor.moveToNext()) {
+            eventsList.add(new Event(
+                    Integer.parseInt(cursor.getString(0)), // id
+                    cursor.getString(1),                   // title
+                    cursor.getString(2),                   // author
+                    cursor.getString(3),                   //type
+                    cursor.getString(4),                   // date
+                    cursor.getString(5),                   // time
+                    Integer.parseInt(cursor.getString(6)), // required people
+                    Integer.parseInt(cursor.getString(7)), // joined people
+                    cursor.getString(8),                   // longitude
+                    cursor.getString(9)                    // latitude
+            ));
+        }
+
+        return eventsList;
+    }
+
+    public int destroyEventWithId(String id) {
+        // returns the number of deleted rows
+        return db.delete(DB_TABLE_EVENTS, "ID = ?",new String[] {id});
     }
 
 }

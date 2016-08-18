@@ -12,26 +12,26 @@ import android.widget.Toast;
 public class ActivityMain extends AppCompatActivity {
 
     private TextView tvUsername, tvPassword, tvMessage;
-    private Button bLogin;
+    private Button bLogin, bRegister;
     private DBHelper dbHelper;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         dbHelper = new DBHelper(this);
 
-        dbHelper.createUser("miksiii", "snele123", "http://www.facebook.com/hkjviprahaos");
-
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvPassword = (TextView) findViewById(R.id.tvPassword);
         tvMessage  = (TextView) findViewById(R.id.tvMessage);
         bLogin     = (Button) findViewById(R.id.bLogin);
+        bRegister  = (Button) findViewById(R.id.bRegister);
     }
 
-    public void login(View v) {
-
+    public void login(View v)
+    {
         User userAttemptedToLogin = dbHelper.getUserWithCredentials(tvUsername.getText().toString(), tvPassword.getText().toString());
 
         if (userAttemptedToLogin == null) {
@@ -49,7 +49,11 @@ public class ActivityMain extends AppCompatActivity {
             Intent switchLoginToChooseSportActivity = new Intent("serenity.rs.sporty.ActivitySportChooser");
             startActivity(switchLoginToChooseSportActivity);
         }
+    }
 
-
+    public void goToRegisterActivity(View v)
+    {
+        Intent switchToRegisterActivity = new Intent("serenity.rs.sporty.ActivityRegisterUser");
+        startActivity(switchToRegisterActivity);
     }
 }

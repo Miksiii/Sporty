@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/filter_today"
-        android:title="Today"
+    <item android:id="@+id/my_events"
+        android:title="My Events"
         app:showAsAction="never" />
 
-    <item android:id="@+id/filter_upcomming"
-        android:title="Upcomming"
+    <item android:id="@+id/all_events"
+        android:title="All"
         app:showAsAction="never" />
 
-    <item android:id="@+id/filter_past"
-        android:title="Past"
+    <item android:id="@+id/other_events"
+        android:title="Other"
         app:showAsAction="never" />
 
 </menu>

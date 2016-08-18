@@ -31,10 +31,10 @@ public class ActivitySportChooser extends AppCompatActivity {
         dbHelper = new DBHelper(this);
         sportsList = new ArrayList<Sport>();
 
-        dbHelper.createSport("fudbol", "aestetik matter!");
-        dbHelper.createSport("basketball", "where amazing happen!");
-        dbHelper.createSport("kwidich", "kwidich as a must!");
-        dbHelper.createSport("volleyball", "white map cant jump!");
+        //dbHelper.createSport("fudbol", "aestetik matter!");
+        //dbHelper.createSport("basketball", "where amazing happen!");
+        //dbHelper.createSport("kwidich", "kwidich as a must!");
+        //dbHelper.createSport("volleyball", "white map cant jump!");
 
         sportsList = dbHelper.getListOfSports();
         sportAdapter = new SportAdapter(getApplicationContext(), sportsList);

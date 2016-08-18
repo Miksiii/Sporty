@@ -3,6 +3,8 @@ package serenity.rs.sporty;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -142,12 +144,17 @@ public class ActivityCreateEvent extends AppCompatActivity {
                 choosenEventDate,
                 choosenEventTime,
                 Integer.parseInt(choosenReqPlayers),
-                0, // joined people is 0 at the beginning
+                1, // joined people is 1 at the beginning
                 etLongitude.getText().toString(),
                 etLatitude.getText().toString()
         );
 
         if (isEventCreated) {
+
+            etTitle.setText("");
+            etLatitude.setText("");
+            etLongitude.setText("");
+
             tvMessage.setText("Your event is now created.");
         } else {
             tvMessage.setText("Ooops! Problems with creating an event.");
@@ -155,5 +162,13 @@ public class ActivityCreateEvent extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SharedPreferences navigator = getSharedPreferences("navigatorDetails", MODE_PRIVATE);
+        SharedPreferences.Editor editor = navigator.edit();
 
+        editor.putString("typeOfEvent", choosenTypeOfSport);
+        editor.commit();
+    }
 }

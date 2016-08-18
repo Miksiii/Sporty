@@ -1,8 +1,14 @@
 package serenity.rs.sporty;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,40 +35,34 @@ public class ActivityEvents extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        lvEvents = (ListView) findViewById(R.id.lvEvents);
-        dbHelper = new DBHelper(this);
-        eventsList = new ArrayList<Event>();
-
-        // fake data
-        dbHelper.createEvent("veceras termin u hali sportova", "miksiii", "football", "22.03.2015.", "21:00", 10, 6, "22224", "24244");
-        dbHelper.createEvent("veceras termin u hali sportova", "miksiii", "football", "22.03.2015.", "21:00", 10, 6, "22224", "24244");
-        dbHelper.createEvent("odbojka na plazi!", "miksiii", "volleyball", "12.03.2015.", "12:00", 8, 3, "2224", "2424");
-        dbHelper.createEvent("basket u centru!", "miksiii", "basketball", "11.05.2015.", "17:00", 6, 2, "1224", "2424");
-        dbHelper.createEvent("tenis na betonskom!", "miksiii", "tennis", "22.03.2016.", "18:00", 2, 2, "2224", "2424");
-
-        eventsList = dbHelper.getListOfEvents();
-
-        eventAdapter = new EventAdapter(getApplicationContext(), eventsList);
-        lvEvents.setAdapter(eventAdapter);
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             eventsToDisplay = extras.getString("selectedTypeOfSport");
+            UtilSportChooser.getUtilSportChooserInstance().setCurrentlyActiveSport(eventsToDisplay);
         }
 
+        lvEvents = (ListView) findViewById(R.id.lvEvents);
+        dbHelper = new DBHelper(this);
+        eventsList = new ArrayList<Event>();
+        eventsList = dbHelper.getListOfEvents(eventsToDisplay);
+
+        eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
+        lvEvents.setAdapter(eventAdapter);
+
         onEventChooseListener();
+
+
     }
 
-    private void onEventChooseListener()
+    public void onEventChooseListener()
     {
         lvEvents.setOnItemClickListener(
-                new AdapterView.OnItemClickListener()
-                {
+                new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
-                    {
-                        Toast.makeText(ActivityEvents.this, "Geo location of it: " + eventsList.get(position).getLongitude() + ", " + eventsList.get(position).getLatitude(), Toast.LENGTH_SHORT).show();
-                    }
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                        String value = adapterView.getItemAtPosition(position).toString();
+                        Toast.makeText(ActivityEvents.this, "GET ITEM: " + value, Toast.LENGTH_SHORT).show();
+                    };
                 }
         );
     }
@@ -76,5 +76,46 @@ public class ActivityEvents extends AppCompatActivity {
         startActivity(switchToCreateEventActivity);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_events_actionbar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.my_events:
+                eventsList = dbHelper.getListOfEventsCreatedBy(User.getUserInstance().getUsername(), eventsToDisplay);
+                eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
+                lvEvents.setAdapter(eventAdapter);
+                return true;
+            case R.id.all_events:
+                eventsList = dbHelper.getListOfEvents(eventsToDisplay);
+                eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
+                lvEvents.setAdapter(eventAdapter);
+                return true;
+            case R.id.other_events:
+                Intent  switchToSportsChooserActivity = new Intent("serenity.rs.sporty.ActivitySportChooser");
+                startActivity(switchToSportsChooserActivity);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static void toaster(Context ctx, int clickedEventId)
+    {
+        Toast.makeText(ctx, "clicked event id " + clickedEventId, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        eventsList = dbHelper.getListOfEvents(UtilSportChooser.getUtilSportChooserInstance().getCurrentlyActiveSport());
+        eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
+        lvEvents.setAdapter(eventAdapter);
+    }
 }
