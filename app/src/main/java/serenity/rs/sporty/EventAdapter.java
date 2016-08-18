@@ -1,12 +1,16 @@
 package serenity.rs.sporty;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +45,7 @@ public class EventAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position)
+    public Event getItem(int position)
     {
         return eventsList.get(position);
     }
@@ -53,7 +57,7 @@ public class EventAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View convertView, final ViewGroup parent) {
 
         View v = View.inflate(ctx, R.layout.pattern_events, null);
 
@@ -73,16 +77,23 @@ public class EventAdapter extends BaseAdapter {
             ivIconDelete.setVisibility(View.INVISIBLE);
         }
 
+        bJoin.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(parent.getContext(), "Cliccked on! " + getItem(i).getAuthor(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         tvAuthor.setText("@" + eventsList.get(i).getAuthor());
         tvDescription.setText("wants to play " + eventsList.get(i).getType() + " on " + eventsList.get(i).getDate() + " at " + eventsList.get(i).getTime() + "h.");
         tvTitle.setText("\"" + eventsList.get(i).getTitle() + "\"");
         tvGoing.setText("Going " + eventsList.get(i).getJoinedPeople() + "/" + eventsList.get(i).getRequiredPeople());
 
-
-
         return v;
     }
+
 
 
 }

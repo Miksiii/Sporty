@@ -52,6 +52,12 @@ public class ActivityEvents extends AppCompatActivity {
         onEventChooseListener();
 
 
+
+
+    }
+
+    public void test(View v) {
+        Toast.makeText(ActivityEvents.this, "halabangarica" + v.toString(), Toast.LENGTH_SHORT).show();
     }
 
     public void onEventChooseListener()
@@ -61,11 +67,16 @@ public class ActivityEvents extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                         String value = adapterView.getItemAtPosition(position).toString();
-                        Toast.makeText(ActivityEvents.this, "GET ITEM: " + value, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityEvents.this, id + "GET ITEM: " + value, Toast.LENGTH_SHORT).show();
                     };
                 }
         );
+
     }
+
+
+
+
 
     public void createEvent(View v)
     {
@@ -105,10 +116,6 @@ public class ActivityEvents extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void toaster(Context ctx, int clickedEventId)
-    {
-        Toast.makeText(ctx, "clicked event id " + clickedEventId, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     protected void onResume()
@@ -118,4 +125,5 @@ public class ActivityEvents extends AppCompatActivity {
         eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
         lvEvents.setAdapter(eventAdapter);
     }
+
 }

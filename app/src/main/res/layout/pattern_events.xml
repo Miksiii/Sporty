@@ -132,7 +132,7 @@
                     android:layout_width="110dp"
                     android:layout_alignTop="@+id/bJoin"
                     android:layout_centerHorizontal="true"
-                    android:focusable="false"/>
+                    android:focusable="false" />
             </LinearLayout>
             <!-- col 2 end -->
             <!-- col 3 -->
