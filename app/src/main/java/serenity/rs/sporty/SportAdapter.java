@@ -11,10 +11,12 @@ import java.util.ArrayList;
 /**
  * Created by Milan on 8/16/2016.
  */
-public class SportAdapter extends BaseAdapter{
-
+public class SportAdapter extends BaseAdapter
+{
     private Context ctx;
     private ArrayList<Sport> sportsList;
+
+    // view holders for Sport attributes
     private TextView tvTitle;
     private TextView tvDescription;
 
@@ -31,28 +33,40 @@ public class SportAdapter extends BaseAdapter{
     }
 
     @Override
-    public Object getItem(int position)
+    public Object getItem(int indexPosition)
     {
-        return sportsList.get(position);
+        return sportsList.get(indexPosition);
     }
 
     @Override
-    public long getItemId(int position)
+    public long getItemId(int indexPosition)
     {
-        return position;
+        return indexPosition;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int indexPosition, View view, ViewGroup viewGroup) {
 
         View v = View.inflate(ctx, R.layout.pattern_sport_chooser, null);
 
-        tvTitle = (TextView) v.findViewById(R.id.tvAuthor);
-        tvDescription = (TextView) v.findViewById(R.id.tvDescription);
-
-        tvTitle.setText(sportsList.get(i).getTitle());
-        tvDescription.setText(sportsList.get(i).getDescription());
+        initViewHolders(v);
+        setViewHoldersValues(v, indexPosition);
 
         return v;
     }
+
+    public void initViewHolders(View v)
+    {
+        tvTitle       = (TextView) v.findViewById(R.id.tvAuthor);
+        tvDescription = (TextView) v.findViewById(R.id.tvDescription);
+    }
+
+    public void setViewHoldersValues(View v, int indexPosition)
+    {
+        Sport tmpSport = sportsList.get(indexPosition);
+
+        tvTitle.setText(tmpSport.getTitle());
+        tvDescription.setText(tmpSport.getDescription());
+    }
+
 }

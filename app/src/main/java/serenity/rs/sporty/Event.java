@@ -3,9 +3,8 @@ package serenity.rs.sporty;
 /**
  * Created by Milan on 8/17/2016.
  */
-public class Event {
-
-    private int id, requiredPeople, joinedPeople;
+public class Event
+{
     private String title,
                    author,
                    type,
@@ -14,11 +13,13 @@ public class Event {
                    longitude,
                    latitude;
 
-    public Event() {
+    private int id, requiredPeople, joinedPeople;
 
-    }
+    public Event() {}
 
-    public Event(int id, String title, String author, String type, String date, String time, int requiredPeople, int joinedPeople, String longitude, String latitude) {
+    public Event(int id, String title, String author, String type, String date, String time,
+                 int requiredPeople, int joinedPeople, String longitude, String latitude)
+    {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -111,19 +112,4 @@ public class Event {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", type='" + type + '\'' +
-                ", date='" + date + '\'' +
-                ", time='" + time + '\'' +
-                ", requiredPeople='" + requiredPeople + '\'' +
-                ", joinedPeople='" + joinedPeople + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", latitude='" + latitude + '\'' +
-                '}';
-    }
 }

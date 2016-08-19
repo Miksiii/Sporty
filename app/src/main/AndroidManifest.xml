@@ -57,17 +57,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityMyEvents">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="serenity.rs.sporty.ActivityEvents" />
-
-            <intent-filter>
-                <action android:name="serenity.rs.sporty.ActivityMyEvents" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity android:name=".ActivityRegisterUser">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

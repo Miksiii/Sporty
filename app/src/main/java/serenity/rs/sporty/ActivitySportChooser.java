@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ActivitySportChooser extends AppCompatActivity {
-
+public class ActivitySportChooser extends AppCompatActivity
+{
     private DBHelper dbHelper;
     private ArrayList<Sport> sportsList;
     private SportAdapter sportAdapter;
@@ -26,15 +26,22 @@ public class ActivitySportChooser extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sport_chooser);
+        initActivityComponents();
+        onEventSelectListener();
+    }
 
-        lvSportList = (ListView) findViewById(R.id.lvSportList);
-        dbHelper = new DBHelper(this);
-        sportsList = new ArrayList<Sport>();
-
-        sportsList = dbHelper.getListOfSports();
+    private void initActivityComponents()
+    {
+        lvSportList  = (ListView) findViewById(R.id.lvSportList);
+        dbHelper     = new DBHelper(this);
+        sportsList   = new ArrayList<Sport>();
+        sportsList   = dbHelper.getListOfSports();
         sportAdapter = new SportAdapter(getApplicationContext(), sportsList);
         lvSportList.setAdapter(sportAdapter);
+    }
 
+    private void onEventSelectListener()
+    {
         lvSportList.setOnItemClickListener(
                 new AdapterView.OnItemClickListener()
                 {
@@ -42,7 +49,8 @@ public class ActivitySportChooser extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id)
                     {
                         Intent switchToEventsActivity = new Intent(ActivitySportChooser.this, ActivityEvents.class);
-                        switchToEventsActivity.putExtra("selectedTypeOfSport", sportsList.get(position).getTitle());
+                        String sportFilter = sportsList.get(position).getTitle();
+                        switchToEventsActivity.putExtra("sportFilter", sportFilter);
                         startActivity(switchToEventsActivity);
                     }
                 }
@@ -50,15 +58,17 @@ public class ActivitySportChooser extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         getMenuInflater().inflate(R.menu.menu_sport_chooser_actionbar, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
             case R.id.link_edit_profile:
                 Intent switchToProfileChangerActivity = new Intent("serenity.rs.sporty.ActivityProfileChanger");
                 startActivity(switchToProfileChangerActivity);

@@ -21,22 +21,22 @@ import java.util.ArrayList;
 /**
  * Created by Milan on 8/17/2016.
  */
-public class EventAdapter extends BaseAdapter implements View.OnCreateContextMenuListener {
-
+public class EventAdapter extends BaseAdapter implements View.OnCreateContextMenuListener
+{
     private Context ctx;
     private ArrayList<Event> eventsList;
-    private TextView tvAuthor, tvDescription, tvTitle, tvGoing;
-    private Button bLocation, bJoin;
-    private ImageView ivIconDelete;
-    private ListView lvEvents;
-    private boolean isMyEvents;
     private DBHelper dbHelper;
 
-    public EventAdapter(Context ctx, ArrayList<Event> eventsList, boolean isMyEvents)
+    // view holders
+    private TextView  tvAuthor, tvDescription, tvTitle, tvGoing;
+    private Button    bLocation, bJoin;
+    private ImageView ivIconDelete;
+    private ListView  lvEvents;
+
+    public EventAdapter(Context ctx, ArrayList<Event> eventsList)
     {
         this.ctx = ctx;
         this.eventsList = eventsList;
-        this.isMyEvents = isMyEvents;
     }
 
     @Override
@@ -46,59 +46,38 @@ public class EventAdapter extends BaseAdapter implements View.OnCreateContextMen
     }
 
     @Override
-    public Event getItem(int position)
+    public Event getItem(int indexPosition)
     {
-        return eventsList.get(position);
+        return eventsList.get(indexPosition);
     }
 
     @Override
-    public long getItemId(int position)
+    public long getItemId(int indexPosition)
     {
-        return position;
+        return indexPosition;
     }
 
-    @Override
-    public View getView(final int i, View convertView, final ViewGroup parent) {
-
-        View v = View.inflate(ctx, R.layout.pattern_events, null);
-
-        dbHelper = new DBHelper(ctx);
-
-        tvAuthor = (TextView) v.findViewById(R.id.tvAuthor);
-        tvDescription = (TextView) v.findViewById(R.id.tvDescription);
-        tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-        tvGoing = (TextView) v.findViewById(R.id.tvGoing);
-        bLocation = (Button) v.findViewById(R.id.bLocation);
-        bJoin = (Button) v.findViewById(R.id.bJoin);
-        ivIconDelete = (ImageView) v.findViewById(R.id.ivIconDelete);
-        lvEvents = (ListView) v.findViewById(R.id.lvEvents);
-
-        if (eventsList.get(i).getAuthor().equals(User.getUserInstance().getUsername())) {
-            ivIconDelete.setVisibility(View.VISIBLE);
-            bJoin.setEnabled(false);
-        } else {
-            ivIconDelete.setVisibility(View.INVISIBLE);
-        }
-
+    private void onEventJoinListener(final int indexPosition, final ViewGroup parent)
+    {
         bJoin.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-
-                        int eventId = getItem(i).getId();
+                    public void onClick(View view)
+                    {
+                        Event tmpEvent = getItem(indexPosition);
 
                         // only if not exist user can join
-                        if(!User.getUserInstance().getIdOfEventsAttemptingOn().contains(eventId)) {
+                        if(!User.getUserInstance().getCheckedinEventIDs().contains(tmpEvent.getId())) {
 
-                            int currentlyJoinedPeople = getItem(i).getJoinedPeople();
-                            ++currentlyJoinedPeople;
+                            int peopleGoing = tmpEvent.getJoinedPeople();
+                            ++peopleGoing;
 
-                            boolean isUpdatedEvent = dbHelper.updateEvent(eventId, currentlyJoinedPeople);
+                            boolean isUpdatedEvent = dbHelper.updateEvent(tmpEvent.getId(), peopleGoing);
 
                             if (isUpdatedEvent)
                             {
-                                eventsList.get(i).setJoinedPeople(currentlyJoinedPeople);
-                                User.getUserInstance().setEventIdToEventsList(eventId);
+                                tmpEvent.setJoinedPeople(peopleGoing);
+                                User.getUserInstance().checkinForEvent(tmpEvent.getId());
                                 Toast.makeText(parent.getContext(), "You are now part of this event.", Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                             }
@@ -106,25 +85,29 @@ public class EventAdapter extends BaseAdapter implements View.OnCreateContextMen
                         } else {
                             Toast.makeText(parent.getContext(), "You are already checked in here.", Toast.LENGTH_SHORT).show();
                         }
-
-
-
-
                     }
                 }
         );
+    }
 
+    private void onEventDestroyListener(final int indexPosition, final ViewGroup parent)
+    {
         ivIconDelete.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view)
+                    {
+                        Event tmpEvent = getItem(indexPosition);
 
-                        int numOfDeletedRows = dbHelper.destroyEventWithId(String.valueOf(getItem(i).getId()));
+                        int eventDestroyedEntry = dbHelper.destroyEventWithId(String.valueOf(tmpEvent.getId()));
 
-                        if (numOfDeletedRows > 0)
+                        if (eventDestroyedEntry > 0)
                         {
-                            Toast.makeText(parent.getContext(), "Event '" + getItem(i).getTitle() + "' is now deleted.", Toast.LENGTH_SHORT).show();
-                            eventsList.remove(i);
+                            Toast.makeText(
+                                    parent.getContext(),
+                                    "Event '" + tmpEvent.getTitle() + "' is now deleted.",
+                                    Toast.LENGTH_SHORT).show();
+                            eventsList.remove(indexPosition);
                             notifyDataSetChanged();
                         } else
                         {
@@ -133,19 +116,65 @@ public class EventAdapter extends BaseAdapter implements View.OnCreateContextMen
                     }
                 }
         );
+    }
 
+    @Override
+    public View getView(final int indexPosition, View convertView, final ViewGroup parent) {
+
+        View v = View.inflate(ctx, R.layout.pattern_events, null);
+        dbHelper = new DBHelper(ctx);
+
+        initViewHolders(v);
+        setViewHoldersValues(v, indexPosition);
+        setViewHoldersAdminExtraValues(v, indexPosition);
+        onEventJoinListener(indexPosition, parent);
+        onEventDestroyListener(indexPosition, parent);
         tvAuthor.setOnCreateContextMenuListener(this);
-
-        tvAuthor.setText("@" + eventsList.get(i).getAuthor());
-        tvDescription.setText("wants to play " + eventsList.get(i).getType() + " on " + eventsList.get(i).getDate() + " at " + eventsList.get(i).getTime() + "h.");
-        tvTitle.setText("\"" + eventsList.get(i).getTitle() + "\"");
-        tvGoing.setText("Going " + eventsList.get(i).getJoinedPeople() + "/" + eventsList.get(i).getRequiredPeople());
 
         return v;
     }
 
-
-    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-        // it will be implemented on activityevents
+    private void initViewHolders(View v)
+    {
+        tvAuthor      = (TextView) v.findViewById(R.id.tvAuthor);
+        tvDescription = (TextView) v.findViewById(R.id.tvDescription);
+        tvTitle       = (TextView) v.findViewById(R.id.tvTitle);
+        tvGoing       = (TextView) v.findViewById(R.id.tvGoing);
+        bLocation     = (Button) v.findViewById(R.id.bLocation);
+        bJoin         = (Button) v.findViewById(R.id.bJoin);
+        ivIconDelete  = (ImageView) v.findViewById(R.id.ivIconDelete);
+        lvEvents      = (ListView) v.findViewById(R.id.lvEvents);
     }
+
+    private void setViewHoldersValues(View v, int indexPosition)
+    {
+        Event tmpEvent = eventsList.get(indexPosition);
+
+        tvAuthor.setText("@" + tmpEvent.getAuthor());
+        tvDescription.setText("wants to play " + tmpEvent.getType() +
+                              " on " + tmpEvent.getDate() +
+                              " at " + tmpEvent.getTime() + "h.");
+        tvTitle.setText("\"" + tmpEvent.getTitle() + "\"");
+        tvGoing.setText("Going " + tmpEvent.getJoinedPeople() + "/" + tmpEvent.getRequiredPeople());
+    }
+
+    private void setViewHoldersAdminExtraValues(View v, int indexPosition) 
+    {
+        Event tmpEvent = eventsList.get(indexPosition);
+        
+        if (tmpEvent.getAuthor().equals(User.getUserInstance().getUsername())) {
+            ivIconDelete.setVisibility(View.VISIBLE);
+            bJoin.setEnabled(false);
+        } else {
+            ivIconDelete.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * This method is implemented and overrided by ActivityEvents activity.
+     * @param contextMenu
+     * @param view
+     * @param contextMenuInfo
+     */
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {}
 }

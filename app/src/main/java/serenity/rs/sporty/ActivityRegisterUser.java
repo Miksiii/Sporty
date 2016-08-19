@@ -9,30 +9,33 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityRegisterUser extends AppCompatActivity {
+public class ActivityRegisterUser extends AppCompatActivity
+{
+    private DBHelper dbHelper;
 
     private EditText etUsername, etPassword, etLink;
     private TextView tvMessage;
     private Button bRegister;
-    private DBHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
-
-        // Add back button
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initActivityComponents();
+    }
 
+    public void initActivityComponents()
+    {
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etLink     = (EditText) findViewById(R.id.etLink);
         tvMessage  = (TextView) findViewById(R.id.tvMessage);
         bRegister  = (Button) findViewById(R.id.bRegister);
-
-        dbHelper = new DBHelper(this);
+        dbHelper   = new DBHelper(this);
     }
 
     public void registerUser(View v)
@@ -41,7 +44,6 @@ public class ActivityRegisterUser extends AppCompatActivity {
         String password = etPassword.getText().toString();
         String link     = etLink.getText().toString();
 
-
         boolean isRegisteredWithNoError = dbHelper.createUser(username, password, link);
 
         if (isRegisteredWithNoError) {
@@ -49,7 +51,6 @@ public class ActivityRegisterUser extends AppCompatActivity {
         } else {
             tvMessage.setText("Ooops! Something went wrong with the creation of your account.");
         }
-
     }
 
 

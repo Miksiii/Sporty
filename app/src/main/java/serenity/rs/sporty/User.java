@@ -5,27 +5,29 @@ import java.util.ArrayList;
 /**
  * Created by Milan on 8/16/2016.
  */
-public class User {
-
-    private static User userInstance = new User();
+public class User
+{
     private int id;
     private String username, password, link;
-    private ArrayList idOfEventsAttemptingOn = new ArrayList<Integer>();
+    private ArrayList checkedinEventIDs = new ArrayList<Integer>();
 
-    public User() {
-    }
+    // current logged in user, singleton
+    private static User userInstance = new User();
 
-    public User(int id, String username, String password, String link) {
+    public User() { }
+
+    public User(int id, String username, String password, String link)
+    {
         this.id = id;
         this.username = username;
         this.password = password;
         this.link = link;
     }
 
-    public static User getUserInstance() {
-        if (userInstance == null) {
+    public static User getUserInstance()
+    {
+        if (userInstance == null)
             userInstance = new User();
-        }
 
         return userInstance;
     }
@@ -46,8 +48,8 @@ public class User {
         return link;
     }
 
-    public ArrayList<Integer> getIdOfEventsAttemptingOn() {
-        return idOfEventsAttemptingOn;
+    public ArrayList<Integer> getCheckedinEventIDs() {
+        return checkedinEventIDs;
     }
 
     public void setPassword(String password) {
@@ -66,17 +68,8 @@ public class User {
         this.id = id;
     }
 
-    public void setEventIdToEventsList(int eventId) {
-        idOfEventsAttemptingOn.add(eventId);
+    public void checkinForEvent(int eventID) {
+        checkedinEventIDs.add(eventID);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", link='" + link + '\'' +
-                '}';
-    }
 }

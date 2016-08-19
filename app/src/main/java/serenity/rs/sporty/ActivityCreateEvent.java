@@ -23,17 +23,18 @@ import java.util.Calendar;
 
 public class ActivityCreateEvent extends AppCompatActivity {
 
+    private DBHelper dbHelper;
+    private ArrayAdapter<String> arrayAdapter;
+    private String sportFilter, choosenEventDate, choosenEventTime;
+    private String[] peopleLimitOnEachEvent;
+
+    private Button bDate, bTime, bCreate;
     private EditText etTitle, etLongitude, etLatitude;
     private TextView tvMessage;
-    private Button bDate, bTime, bCreate;
     private Spinner sRequiredPlayers;
-    private ArrayAdapter<String> arrayAdapter;
-    private String[] numOfMaxPeople;
-    private String choosenTypeOfSport, choosenEventDate, choosenEventTime;
-    private DBHelper dbHelper;
 
     private int dateYear, dateMonth, dateDay,
-            timeHour, timeMinute, timeSecond;
+                timeHour, timeMinute, timeSecond;
 
     static final int DIALOG_DATEPICKER_ID = 0,
                      DIALOG_TIMEPICKER_ID = 1;
@@ -43,13 +44,17 @@ public class ActivityCreateEvent extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-
-        // Add back button
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initActivityComponents();
+        setActivityComponents();
+        getExtrasFromPreviousActivity();
+        onOpenDateListener();
+        onOpenTimeListener();
+    }
 
-        dbHelper = new DBHelper(this);
-
+    private void setActivityComponents()
+    {
         Calendar calendar = Calendar.getInstance();
         dateYear   = calendar.get(Calendar.YEAR);
         dateMonth  = calendar.get(Calendar.MONTH);
@@ -58,20 +63,33 @@ public class ActivityCreateEvent extends AppCompatActivity {
         timeMinute = calendar.get(Calendar.MINUTE);
         timeSecond = calendar.get(Calendar.SECOND);
 
-        numOfMaxPeople = getResources().getStringArray(R.array.number_of_people);
+        setSpinnerView();
+    }
 
+    private void setSpinnerView()
+    {
+        peopleLimitOnEachEvent = getResources().getStringArray(R.array.number_of_people);
         sRequiredPlayers = (Spinner) findViewById(R.id.sRequiredPlayers);
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numOfMaxPeople);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, peopleLimitOnEachEvent);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sRequiredPlayers.setAdapter(arrayAdapter);
+    }
 
+    private void initActivityComponents()
+    {
+        etTitle     = (EditText) findViewById(R.id.etTitle);
+        etLongitude = (EditText) findViewById(R.id.etLongitude);
+        etLatitude  = (EditText) findViewById(R.id.etLatitude);
+        tvMessage   = (TextView) findViewById(R.id.tvMessage);
+        dbHelper = new DBHelper(this);
+    }
+
+    private void getExtrasFromPreviousActivity()
+    {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            choosenTypeOfSport = extras.getString("typeOfSport");
+            sportFilter = extras.getString("sportFilter");
         }
-
-        onOpenDateListener();
-        onOpenTimeListener();
     }
 
     private void onOpenDateListener()
@@ -103,9 +121,10 @@ public class ActivityCreateEvent extends AppCompatActivity {
     }
 
     @Override
-    protected Dialog onCreateDialog(int id) {
-
-        switch (id) {
+    protected Dialog onCreateDialog(int id)
+    {
+        switch (id)
+        {
             case DIALOG_DATEPICKER_ID:
                 return new DatePickerDialog(this, onDatePickListener, dateYear, dateMonth, dateDay);
             case DIALOG_TIMEPICKER_ID:
@@ -131,16 +150,12 @@ public class ActivityCreateEvent extends AppCompatActivity {
 
     public void createEvent(View v)
     {
-        etTitle     = (EditText) findViewById(R.id.etTitle);
-        etLongitude = (EditText) findViewById(R.id.etLongitude);
-        etLatitude  = (EditText) findViewById(R.id.etLatitude);
-        tvMessage   = (TextView) findViewById(R.id.tvMessage);
         String choosenReqPlayers = sRequiredPlayers.getSelectedItem().toString();
 
         boolean isEventCreated = dbHelper.createEvent(
                 etTitle.getText().toString(),
                 User.getUserInstance().getUsername(),
-                choosenTypeOfSport,
+                sportFilter,
                 choosenEventDate,
                 choosenEventTime,
                 Integer.parseInt(choosenReqPlayers),
@@ -160,15 +175,5 @@ public class ActivityCreateEvent extends AppCompatActivity {
             tvMessage.setText("Ooops! Problems with creating an event.");
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        SharedPreferences navigator = getSharedPreferences("navigatorDetails", MODE_PRIVATE);
-        SharedPreferences.Editor editor = navigator.edit();
-
-        editor.putString("typeOfEvent", choosenTypeOfSport);
-        editor.commit();
     }
 }

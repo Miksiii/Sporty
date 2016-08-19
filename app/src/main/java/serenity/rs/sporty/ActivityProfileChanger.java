@@ -10,41 +10,49 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityProfileChanger extends AppCompatActivity {
+public class ActivityProfileChanger extends AppCompatActivity
+{
+    private DBHelper dbHelper;
 
     private EditText etUsername, etPassword, etLink;
     private TextView tvMessage;
     private Button bUpdate;
-    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_changer);
-
-        // Add back button
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initActivityComponents();
+        setActivityComponentsValues();
+    }
 
+    private void initActivityComponents()
+    {
         dbHelper   =  new DBHelper(this);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etLink     = (EditText) findViewById(R.id.etLink);
         bUpdate    = (Button) findViewById(R.id.bUpdate);
         tvMessage  = (TextView) findViewById(R.id.tvMessage);
+    }
 
+    private void setActivityComponentsValues()
+    {
         etUsername.setText(User.getUserInstance().getUsername());
         etPassword.setText(User.getUserInstance().getPassword());
         etLink.setText(User.getUserInstance().getLink());
     }
 
-    public void updateUser(View v) {
+    public void updateUser(View v)
+    {
         boolean isUpdated = dbHelper.updateUser(
                 User.getUserInstance().getId(),
                 etUsername.getText().toString(),
                 etPassword.getText().toString(),
                 etLink.getText().toString()
-        );
+            );
 
         if (isUpdated) {
             tvMessage.setText("You're updated now.");
@@ -52,6 +60,5 @@ public class ActivityProfileChanger extends AppCompatActivity {
             tvMessage.setText("Ooops! Something went wrong with updating your info.");
         }
     }
-
 
 }
