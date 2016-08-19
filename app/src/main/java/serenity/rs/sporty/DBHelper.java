@@ -140,6 +140,27 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public User getUserWithCredentials(String username)
+    {
+        Cursor cursor = null;
+        User user = null;
+        try{
+
+            cursor = db.rawQuery("SELECT * FROM  users where username='"+username+"'" , null);
+
+            if(cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                user = new User(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+            }
+
+            return user;
+
+        }finally {
+
+            cursor.close();
+        }
+    }
+
     public boolean updateUser(int id, String username, String password, String link)
     {
         ContentValues userContent = new ContentValues();
@@ -249,6 +270,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public int destroyEventWithId(String id) {
         // returns the number of deleted rows
         return db.delete(DB_TABLE_EVENTS, "ID = ?",new String[] {id});
+    }
+
+    public boolean updateEvent(int id, int joinedPeople)
+    {
+        ContentValues eventContent = new ContentValues();
+        eventContent.put(EVENTS_JOINED_PEOPLE, joinedPeople);
+
+        long query = db.update(DB_TABLE_EVENTS, eventContent, "ID = ?", new String[] { String.valueOf(id) });
+
+        return true;
     }
 
 }

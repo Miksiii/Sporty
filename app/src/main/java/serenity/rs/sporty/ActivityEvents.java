@@ -1,8 +1,10 @@
 package serenity.rs.sporty;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +27,8 @@ public class ActivityEvents extends AppCompatActivity {
     private ListView lvEvents;
     private String eventsToDisplay;
     private Button bCreate;
+    private Event eventFromContextMenu;
+    private User userFromContextMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class ActivityEvents extends AppCompatActivity {
 
         eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
         lvEvents.setAdapter(eventAdapter);
+        registerForContextMenu(lvEvents);
 
         onEventChooseListener();
 
@@ -125,5 +130,63 @@ public class ActivityEvents extends AppCompatActivity {
         eventAdapter = new EventAdapter(getApplicationContext(), eventsList, false);
         lvEvents.setAdapter(eventAdapter);
     }
+
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu contextMenu, View view,
+                                    ContextMenu.ContextMenuInfo contextMenuInfo) {
+        // create context the menu
+        getMenuInflater().inflate(R.menu.menu_context_contact_user, contextMenu);
+
+        // get the event that is clicked on to open contextmenu
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)contextMenuInfo;
+        eventFromContextMenu = eventsList.get(info.position);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        userFromContextMenu = dbHelper.getUserWithCredentials(eventFromContextMenu.getAuthor());
+
+        switch (item.getItemId()) {
+            case R.id.opt_visit_url:
+
+                Intent openUsersSocialProfile = new Intent("android.intent.action.VIEW");
+
+                // check if url contains http and if dont then open intent with http
+                if (userFromContextMenu.getLink().startsWith("http"))  {
+                    openUsersSocialProfile.setData(Uri.parse(userFromContextMenu.getLink()));
+                } else {
+                    openUsersSocialProfile.setData(Uri.parse("http://www." + userFromContextMenu.getLink()));
+                }
+
+                startActivity(openUsersSocialProfile);
+                return true;
+
+            case R.id.opt_make_call:
+
+                Intent makeCall = new Intent(android.content.Intent.ACTION_DIAL);
+                startActivity(makeCall);
+                return true;
+
+            case R.id.opt_send_sms:
+
+                Intent sendSMS = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.fromParts("sms", "", null)
+                );
+                startActivity(sendSMS);
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
+
+
+
 
 }

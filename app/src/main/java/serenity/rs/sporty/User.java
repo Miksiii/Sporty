@@ -1,5 +1,7 @@
 package serenity.rs.sporty;
 
+import java.util.ArrayList;
+
 /**
  * Created by Milan on 8/16/2016.
  */
@@ -8,9 +10,9 @@ public class User {
     private static User userInstance = new User();
     private int id;
     private String username, password, link;
+    private ArrayList idOfEventsAttemptingOn = new ArrayList<Integer>();
 
     public User() {
-
     }
 
     public User(int id, String username, String password, String link) {
@@ -44,6 +46,10 @@ public class User {
         return link;
     }
 
+    public ArrayList<Integer> getIdOfEventsAttemptingOn() {
+        return idOfEventsAttemptingOn;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -58,6 +64,10 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setEventIdToEventsList(int eventId) {
+        idOfEventsAttemptingOn.add(eventId);
     }
 
     @Override

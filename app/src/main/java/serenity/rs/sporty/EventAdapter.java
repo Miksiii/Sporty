@@ -2,6 +2,7 @@ package serenity.rs.sporty;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by Milan on 8/17/2016.
  */
-public class EventAdapter extends BaseAdapter {
+public class EventAdapter extends BaseAdapter implements View.OnCreateContextMenuListener {
 
     private Context ctx;
     private ArrayList<Event> eventsList;
@@ -61,6 +62,8 @@ public class EventAdapter extends BaseAdapter {
 
         View v = View.inflate(ctx, R.layout.pattern_events, null);
 
+        dbHelper = new DBHelper(ctx);
+
         tvAuthor = (TextView) v.findViewById(R.id.tvAuthor);
         tvDescription = (TextView) v.findViewById(R.id.tvDescription);
         tvTitle = (TextView) v.findViewById(R.id.tvTitle);
@@ -81,10 +84,57 @@ public class EventAdapter extends BaseAdapter {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(parent.getContext(), "Cliccked on! " + getItem(i).getAuthor(), Toast.LENGTH_SHORT).show();
+
+                        int eventId = getItem(i).getId();
+
+                        // only if not exist user can join
+                        if(!User.getUserInstance().getIdOfEventsAttemptingOn().contains(eventId)) {
+
+                            int currentlyJoinedPeople = getItem(i).getJoinedPeople();
+                            ++currentlyJoinedPeople;
+
+                            boolean isUpdatedEvent = dbHelper.updateEvent(eventId, currentlyJoinedPeople);
+
+                            if (isUpdatedEvent)
+                            {
+                                eventsList.get(i).setJoinedPeople(currentlyJoinedPeople);
+                                User.getUserInstance().setEventIdToEventsList(eventId);
+                                Toast.makeText(parent.getContext(), "You are now part of this event.", Toast.LENGTH_SHORT).show();
+                                notifyDataSetChanged();
+                            }
+
+                        } else {
+                            Toast.makeText(parent.getContext(), "You are already checked in here.", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
+
                     }
                 }
         );
+
+        ivIconDelete.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        int numOfDeletedRows = dbHelper.destroyEventWithId(String.valueOf(getItem(i).getId()));
+
+                        if (numOfDeletedRows > 0)
+                        {
+                            Toast.makeText(parent.getContext(), "Event '" + getItem(i).getTitle() + "' is now deleted.", Toast.LENGTH_SHORT).show();
+                            eventsList.remove(i);
+                            notifyDataSetChanged();
+                        } else
+                        {
+                            Toast.makeText(parent.getContext(), "Ooops! Problem with deleting event..", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
+        tvAuthor.setOnCreateContextMenuListener(this);
 
         tvAuthor.setText("@" + eventsList.get(i).getAuthor());
         tvDescription.setText("wants to play " + eventsList.get(i).getType() + " on " + eventsList.get(i).getDate() + " at " + eventsList.get(i).getTime() + "h.");
@@ -95,5 +145,7 @@ public class EventAdapter extends BaseAdapter {
     }
 
 
-
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+        // it will be implemented on activityevents
+    }
 }
