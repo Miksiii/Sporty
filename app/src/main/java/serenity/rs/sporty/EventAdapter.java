@@ -1,6 +1,7 @@
 package serenity.rs.sporty;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -118,6 +119,26 @@ public class EventAdapter extends BaseAdapter implements View.OnCreateContextMen
         );
     }
 
+    private void onEventLocationListener(final int indexPosition, final ViewGroup parent)
+    {
+        bLocation.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Event tmpEvent = getItem(indexPosition);
+
+                        Intent switchToGoogleMapActivity = new Intent(parent.getContext(), ActivityGoogleMap.class);
+                        switchToGoogleMapActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        switchToGoogleMapActivity.putExtra("longitude", tmpEvent.getLongitude());
+                        switchToGoogleMapActivity.putExtra("latitude", tmpEvent.getLatitude());
+                        switchToGoogleMapActivity.putExtra("title", tmpEvent.getTitle());
+                        parent.getContext().startActivity(switchToGoogleMapActivity);
+                    }
+                }
+        );
+    }
+
     @Override
     public View getView(final int indexPosition, View convertView, final ViewGroup parent) {
 
@@ -129,6 +150,7 @@ public class EventAdapter extends BaseAdapter implements View.OnCreateContextMen
         setViewHoldersAdminExtraValues(v, indexPosition);
         onEventJoinListener(indexPosition, parent);
         onEventDestroyListener(indexPosition, parent);
+        onEventLocationListener(indexPosition, parent);
         tvAuthor.setOnCreateContextMenuListener(this);
 
         return v;

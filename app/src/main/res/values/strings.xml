@@ -31,4 +31,5 @@
         <item>29</item>
         <item>30</item>
     </string-array>
+    <string name="title_activity_activity_google_map">Map</string>
 </resources>
