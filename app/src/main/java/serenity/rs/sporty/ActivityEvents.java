@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ public class ActivityEvents extends AppCompatActivity
     private EventAdapter eventAdapter;
 
     private ListView lvEvents;
-    private Button bCreate;
+    private ImageView bCreate;
 
     private String sportFilter;
     private Event eventFromContextMenu;
@@ -52,6 +53,7 @@ public class ActivityEvents extends AppCompatActivity
 
     public void initActivityComponents()
     {
+        bCreate = (ImageView) findViewById(R.id.bCreate);
         lvEvents = (ListView) findViewById(R.id.lvEvents);
         dbHelper = new DBHelper(this);
         eventsList = new ArrayList<Event>();
@@ -74,11 +76,8 @@ public class ActivityEvents extends AppCompatActivity
 
     }
 
-
     public void createEvent(View v)
     {
-        bCreate = (Button) findViewById(R.id.bCreate);
-
         Intent switchToCreateEventActivity = new Intent("serenity.rs.sporty.ActivityCreateEvent");
         switchToCreateEventActivity.putExtra("sportFilter", sportFilter);
         startActivity(switchToCreateEventActivity);

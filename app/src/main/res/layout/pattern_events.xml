@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ivIconDelete"
             android:layout_gravity="right"
-            android:src="@drawable/delete_forever"
+            android:src="@drawable/icon_delete"
             android:visibility="invisible" />
 
         <TextView
